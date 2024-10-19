@@ -1,141 +1,148 @@
-create database QLDATSANTHETHAO
-use QLDATSANTHETHAO
+CREATE DATABASE QLDATSANTHETHAO;
+USE QLDATSANTHETHAO;
 
-CREATE TABLE USERS
-(
-	Id int primary key,
-	Username varchar(50),
-	HashedPassword varchar(50),
-	Email varchar(255),
-	PhoneNumber char(10),
-	FCMToken nvarchar(1024),
-	FullName nvarchar(100),
-	DateOfBirth date,
-	Gender smallint,
-	Address nvarchar(500),
-	Role smallint,
-)
+CREATE TABLE USERS (
+    Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(50) NOT NULL,
+    HashedPassword VARCHAR(1024) NOT NULL,
+    Email VARCHAR(255),
+    PhoneNumber CHAR(10),
+    FCMToken VARCHAR(1024),
+    FullName VARCHAR(100),
+    DateOfBirth DATE,
+    Gender SMALLINT,
+    Address VARCHAR(500),
+    Role SMALLINT
+);
 
-CREATE TABLE YARD_TYPES 
-(
-	Id int primary key,
-	Name nvarchar(50),
-	IsDelete smallint,
-)
+CREATE TABLE YARD_TYPES (
+    Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(50),
+    IsDelete SMALLINT
+);
 
-CREATE TABLE YARDS
-(
-	Id int primary key,
-	YardType int foreign key references YARD_TYPES,
-	Name nvarchar(255),
-	NameTransformed varchar(255),
-	Address nvarchar(500),
-	Description nvarchar(1024),
-	Owner int foreign key references OWNERS,
-	Amenity int,
-	IsDelete smallint
-)
+CREATE TABLE YARDS (
+    Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    YardType INT,
+    Name VARCHAR(255),
+    NameTransformed VARCHAR(255),
+    Address VARCHAR(500),
+    Description VARCHAR(1024),
+    Owner INT,
+    Amenity INT,
+    IsDelete SMALLINT
+);
 
-CREATE TABLE YARD_IMAGE 
-(
-	Id int,
-	YardId int foreign key references YARDS,
-	ImageURL nvarchar(1024),
-	CONSTRAINT PK_YARD_IMAGE primary key (Id, YardId)
-)
+CREATE TABLE YARD_IMAGE (
+    Id INT NOT NULL AUTO_INCREMENT,
+    YardId INT,
+    ImageURL VARCHAR(1024),
+    CONSTRAINT PK_YARD_IMAGE PRIMARY KEY (Id, YardId)
+);
 
-CREATE TABLE YARD_DETAIL
-(
-	Id int primary key,
-	YardId int foreign key references YARDS,
-	Name nvarchar(255),
-	Location nvarchar(50),
-	Description nvarchar(1024),
-	Capacity int,
-	Price float,
-	PricePeak float,
-	IsDelete smallint
-)
+CREATE TABLE YARD_DETAIL (
+    Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    YardId INT,
+    Name VARCHAR(255),
+    Location VARCHAR(50),
+    Description VARCHAR(1024),
+    Capacity INT,
+    Price FLOAT,
+    PricePeak FLOAT,
+    IsDelete SMALLINT
+);
 
-CREATE TABLE AMENITIES
-(
-	Id int primary key,
-	Name nvarchar(50),
-	Icon nvarchar(50),
-	IsDelete smallint
-)
+CREATE TABLE AMENITIES (
+    Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(50),
+    Icon VARCHAR(50),
+    IsDelete SMALLINT
+);
 
-CREATE TABLE AMENITIES_OF_YARD 
-(
-	YardId int foreign key references YARDS,
-	AmenityId int foreign key references AMENITIES,
-	constraint PK_AMENITIES_OF_YARD primary key (YardId, AmenityId)
-)
+CREATE TABLE AMENITIES_OF_YARD (
+    YardId INT,
+    AmenityId INT,
+    CONSTRAINT PK_AMENITIES_OF_YARD PRIMARY KEY (YardId, AmenityId)
+);
 
-CREATE TABLE BOOKINGS
-(
-	Id int primary key,
-	User int foreign key references USERS,
-	Yard int foreign key references YARD_DETAIL,
-	StartTime datetime,
-	EndTime datetime,
-	Status nvarchar(10),
-	Note nvarchar(500),
-	QRCode nvarchar(500),
-	IsDelete smallint
-)
+CREATE TABLE BOOKINGS (
+    Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    UserId INT,
+    Yard INT,
+    StartTime DATETIME,
+    EndTime DATETIME,
+    Status VARCHAR(10),
+    Note VARCHAR(500),
+    QRCode VARCHAR(500),
+    IsDelete SMALLINT
+);
 
-CREATE TABLE RATINGS
-(
-	Id int primary key,
-	User int foreign key references USERS,
-	Yard int foreign key references YARDS,
-	Rating int,
-	Comment nvarchar(1024),
-	RatingId int foreign key references RATINGS,
-	CreateAt datetime,
-	IsDelete smallint,
-)
+CREATE TABLE RATINGS (
+    Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    UserId INT,
+    Yard INT,
+    Rating INT,
+    Comment VARCHAR(1024),
+    CreateAt DATETIME,
+    IsDelete SMALLINT
+);
 
-CREATE TABLE VOUCHERS
-(
-	Id int primary key,
-	Name nvarchar(100),
-	Type nvarchar(100),
-	Discount float,
-	StartDate datetime,
-	EndDate datetime,
-	IsDelete smallint
-)
+CREATE TABLE VOUCHERS (
+    Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100),
+    Type VARCHAR(100),
+    Discount FLOAT,
+    StartDate DATETIME,
+    EndDate DATETIME,
+    IsDelete SMALLINT
+);
 
-CREATE TABLE PAYMENTS
-(
-	Id int primary key,
-	BookingIds nvarchar(100),
-	PaymentMethod nvarchar(100),
-	PaymentDate datetime,
-	VoucherId int foreign key references VOUCHERS,
-	Total float,
-	IsDelete smallint
-)
+CREATE TABLE PAYMENTS (
+    Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    BookingIds VARCHAR(100),
+    PaymentMethod VARCHAR(100),
+    PaymentDate DATETIME,
+    VoucherId INT,
+    Total FLOAT,
+    IsDelete SMALLINT
+);
 
-CREATE TABLE WISHLIST
-(
-	User int foreign key references USERS,
-	Yard int foreign key references YARDS,
-	CONSTRAINT PK_WISHLIST primary key (User, Yard)
-)
+CREATE TABLE WISHLIST (
+    UserId INT,
+    Yard INT,
+    CONSTRAINT PK_WISHLIST PRIMARY KEY (UserId, Yard)
+);
 
-CREATE TABLE OWNERS
-(
-	Id int primary key,
-	Username varchar(50),
-	HashedPassword varchar(50),
-	FullName nvarchar(100),
-	DateOfBirth date,
-	Address nvarchar(500),
-	PhoneNumber char(10),
-	Gender smallint,
-	IsLocked smallint,
-)
+CREATE TABLE OWNERS (
+    Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(50),
+    HashedPassword VARCHAR(1024),
+    FullName VARCHAR(100),
+    DateOfBirth DATE,
+    Address VARCHAR(500),
+    PhoneNumber CHAR(10),
+    Gender SMALLINT,
+    IsLocked SMALLINT
+);
 
+-- Thiết lập ràng buộc khóa ngoại
+ALTER TABLE YARDS ADD CONSTRAINT FK_YARDS_TYPE FOREIGN KEY (YardType) REFERENCES YARD_TYPES(Id);
+ALTER TABLE YARDS ADD CONSTRAINT FK_YARDS_OWNER FOREIGN KEY (Owner) REFERENCES OWNERS(Id);
+
+ALTER TABLE YARD_IMAGE ADD CONSTRAINT FK_IMAGE_YARD FOREIGN KEY (YardId) REFERENCES YARDS(Id);
+
+ALTER TABLE YARD_DETAIL ADD CONSTRAINT FK_DETAIL_YARD FOREIGN KEY (YardId) REFERENCES YARDS(Id);
+
+ALTER TABLE AMENITIES_OF_YARD ADD CONSTRAINT FK_AMENITY_YARD FOREIGN KEY (YardId) REFERENCES YARDS(Id);
+ALTER TABLE AMENITIES_OF_YARD ADD CONSTRAINT FK_AMENITY_AMENITY FOREIGN KEY (AmenityId) REFERENCES AMENITIES(Id);
+
+ALTER TABLE BOOKINGS ADD CONSTRAINT FK_BOOKING_USER FOREIGN KEY (UserId) REFERENCES USERS(Id);
+ALTER TABLE BOOKINGS ADD CONSTRAINT FK_BOOKING_YARD FOREIGN KEY (Yard) REFERENCES YARDS(Id);
+
+ALTER TABLE RATINGS ADD CONSTRAINT FK_RATING_USER FOREIGN KEY (UserId) REFERENCES USERS(Id);
+ALTER TABLE RATINGS ADD CONSTRAINT FK_RATING_YARD FOREIGN KEY (Yard) REFERENCES YARDS(Id);
+
+ALTER TABLE PAYMENTS ADD CONSTRAINT FK_PAYMENT_VOUCHER FOREIGN KEY (VoucherId) REFERENCES VOUCHERS(Id);
+
+ALTER TABLE WISHLIST ADD CONSTRAINT FK_WISHLIST_USER FOREIGN KEY (UserId) REFERENCES USERS(Id);
+ALTER TABLE WISHLIST ADD CONSTRAINT FK_WISHLIST_YARD FOREIGN KEY (Yard) REFERENCES YARDS(Id);
